@@ -4,7 +4,6 @@ import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 import { checkEmailExists } from "@/lib/cpanel";
-import { initPayment } from "@/lib/flutterwave";
 import { getBundlePrice, PLANS } from "@/lib/plans";
 import { validateUsername, validatePassword } from "@/lib/utils";
 import { rateLimit, rateLimitResponse } from "@/lib/ratelimit";
@@ -111,25 +110,31 @@ export async function POST(req: NextRequest) {
     )
   );
 
-  // Init Flutterwave — single payment for all emails
-  const paymentLink = await initPayment({
+  const meta = {
+    orderIds: orders.map((o) => o.id).join(","),
+    bundleTxRef: txRef,
+    slots: JSON.stringify(
+      slotsWithHash.map((s) => ({ username: s.username, passwordPlain: s.passwordPlain }))
+    ),
+    qty: String(qty),
+    billingType,
+  };
+
+  return NextResponse.json({
+    publicKey: process.env.FLW_PUBLIC_KEY,
     txRef,
     amount: amountNaira,
     currency: "NGN",
     redirectUrl: `${appUrl}/checkout/success`,
-    customerEmail: session.user!.email!,
-    customerName: session.user!.name ?? session.user!.email!,
-    planName: qty === 1 ? "1 Email Account" : `${qty} Email Accounts`,
-    meta: {
-      orderIds: orders.map((o) => o.id).join(","),
-      bundleTxRef: txRef,
-      slots: JSON.stringify(
-        slotsWithHash.map((s) => ({ username: s.username, passwordPlain: s.passwordPlain }))
-      ),
-      qty: String(qty),
-      billingType,
+    customer: {
+      email: session.user!.email!,
+      name: session.user!.name ?? session.user!.email!,
     },
+    customizations: {
+      title: "Mailsnow",
+      description: qty === 1 ? "1 Email Account" : `${qty} Email Accounts`,
+      logo: `${appUrl}/logo.png`,
+    },
+    meta,
   });
-
-  return NextResponse.json({ url: paymentLink.link });
 }

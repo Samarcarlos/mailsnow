@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import {
   QUANTITY_OPTIONS,
   getBundlePrice,
@@ -140,7 +141,20 @@ function CheckoutForm() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Checkout failed"); setSubmitting(false); return; }
-      window.location.href = data.url;
+
+      // Open Flutterwave inline modal (no redirect to checkout.flutterwave.com)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).FlutterwaveCheckout({
+        public_key: data.publicKey,
+        tx_ref: data.txRef,
+        amount: data.amount,
+        currency: data.currency,
+        redirect_url: data.redirectUrl,
+        customer: data.customer,
+        customizations: data.customizations,
+        meta: data.meta,
+      });
+      setSubmitting(false);
     } catch {
       setError("Something went wrong. Please try again.");
       setSubmitting(false);
@@ -336,7 +350,7 @@ function CheckoutForm() {
             className="w-full bg-white text-blue-600 font-bold py-3 rounded-xl hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             {submitting
-              ? "Redirecting to payment..."
+              ? "Opening payment..."
               : `Pay ${formatNaira(bundle.total)} →`}
           </button>
           <p className="text-center text-blue-200 text-xs mt-3">
@@ -361,8 +375,11 @@ function CheckoutForm() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
-      <CheckoutForm />
-    </Suspense>
+    <>
+      <Script src="https://checkout.flutterwave.com/v3.js" strategy="beforeInteractive" />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
+        <CheckoutForm />
+      </Suspense>
+    </>
   );
 }
