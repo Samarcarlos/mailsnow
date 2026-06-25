@@ -160,6 +160,13 @@ function BuyForm() {
         customer: data.customer,
         customizations: data.customizations,
         meta: data.meta,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback: function (payment: any) {
+          window.location.href = `/buy/success?transaction_id=${payment.transaction_id}&tx_ref=${payment.tx_ref}&status=${payment.status}`;
+        },
+        onclose: function () {
+          setSubmitting(false);
+        },
       });
       setSubmitting(false);
     } catch {
