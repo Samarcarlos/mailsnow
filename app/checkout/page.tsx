@@ -4,7 +4,6 @@ import { Suspense, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 import {
   QUANTITY_OPTIONS,
   getBundlePrice,
@@ -142,7 +141,18 @@ function CheckoutForm() {
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Checkout failed"); setSubmitting(false); return; }
 
-      // Open Flutterwave inline modal (no redirect to checkout.flutterwave.com)
+      // Load Flutterwave script on-demand then open inline modal
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await new Promise<void>((resolve, reject) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((window as any).FlutterwaveCheckout) { resolve(); return; }
+        const s = document.createElement("script");
+        s.src = "https://checkout.flutterwave.com/v3.js";
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("Could not load payment script"));
+        document.body.appendChild(s);
+      });
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).FlutterwaveCheckout({
         public_key: data.publicKey,
@@ -375,11 +385,8 @@ function CheckoutForm() {
 
 export default function CheckoutPage() {
   return (
-    <>
-      <Script src="https://checkout.flutterwave.com/v3.js" strategy="afterInteractive" />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
-        <CheckoutForm />
-      </Suspense>
-    </>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
+      <CheckoutForm />
+    </Suspense>
   );
 }
