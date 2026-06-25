@@ -24,6 +24,8 @@ export default function Footer() {
             <p className="text-gray-300 font-semibold mb-3 text-xs uppercase tracking-wide">Support</p>
             <ul className="space-y-2">
               <li><Link href="/faq" className="hover:text-white transition">FAQ</Link></li>
+              <li><Link href="/support" className="hover:text-white transition">Help &amp; Support</Link></li>
+              <li><Link href="/dashboard/recover" className="hover:text-white transition">Recover purchase</Link></li>
               <li>
                 <a href="mailto:support@mailsnow.live" className="hover:text-white transition">
                   Contact us

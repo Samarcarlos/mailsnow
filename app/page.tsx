@@ -58,6 +58,7 @@ export default function HomePage() {
           <span className="text-xl font-bold text-blue-600">Mailsnow</span>
           <div className="flex gap-4 text-sm items-center">
             <Link href="/faq" className="text-gray-500 hover:text-gray-900 hidden md:block">FAQ</Link>
+            <Link href="/support" className="text-gray-500 hover:text-gray-900 hidden md:block">Support</Link>
             <Link href="/login" className="text-gray-600 hover:text-gray-900">Sign in</Link>
             <Link
               href="/register"
