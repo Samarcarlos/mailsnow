@@ -48,23 +48,14 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
   trustHost: true,
   providers,
   callbacks: {
-    jwt({ token, user }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    session({ session, user }: any) {
       if (user) {
-        token.id = user.id;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        token.role = (user as any).role;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (session.user as any).role = token.role;
+        session.user.id = user.id;
+        session.user.role = user.role ?? "CUSTOMER";
       }
       return session;
     },
