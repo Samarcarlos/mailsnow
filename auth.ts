@@ -6,52 +6,62 @@ import bcrypt from "bcryptjs";
 import { verifyTOTPToken } from "@/lib/totp";
 import { prisma } from "@/lib/prisma";
 
-const providers = [
-  Credentials({
-    credentials: {
-      email: { label: "Email", type: "email" },
-      password: { label: "Password", type: "password" },
-      totpCode: { label: "2FA Code", type: "text" },
-    },
-    async authorize(credentials) {
-      if (!credentials?.email || !credentials?.password) return null;
-      const user = await prisma.user.findUnique({
-        where: { email: credentials.email as string },
-      });
-      if (!user?.passwordHash) return null;
-      const valid = await bcrypt.compare(
-        credentials.password as string,
-        user.passwordHash
-      );
-      if (!valid) return null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const googleProvider: any =
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    ? Google({
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      })
+    : null;
 
-      if (user.twoFactorEnabled && user.twoFactorSecret) {
-        const code = (credentials.totpCode as string) ?? "";
-        if (!code) return null;
-        if (!verifyTOTPToken(user.twoFactorSecret, code)) return null;
-      }
+const credentialsProvider = Credentials({
+  credentials: {
+    email: { label: "Email", type: "email" },
+    password: { label: "Password", type: "password" },
+    totpCode: { label: "2FA Code", type: "text" },
+  },
+  async authorize(credentials) {
+    if (!credentials?.email || !credentials?.password) return null;
+    const user = await prisma.user.findUnique({
+      where: { email: credentials.email as string },
+    });
+    if (!user?.passwordHash) return null;
+    const valid = await bcrypt.compare(
+      credentials.password as string,
+      user.passwordHash
+    );
+    if (!valid) return null;
 
-      return user;
-    },
-  }),
-];
+    if (user.twoFactorEnabled && user.twoFactorSecret) {
+      const code = (credentials.totpCode as string) ?? "";
+      if (!code) return null;
+      if (!verifyTOTPToken(user.twoFactorSecret, code)) return null;
+    }
 
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  providers.unshift(
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }) as never
-  );
-}
+    return user;
+  },
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const providers: any[] = googleProvider
+  ? [googleProvider, credentialsProvider]
+  : [credentialsProvider];
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "mailsnow-2026-auth-secret-key-32ch",
+  secret:
+    process.env.AUTH_SECRET ??
+    process.env.NEXTAUTH_SECRET ??
+    "mailsnow-2026-auth-secret-key-32ch",
   adapter: PrismaAdapter(prisma),
   trustHost: true,
   providers,
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async signIn({ account }: any) {
+      console.log("[auth] signIn provider:", account?.provider);
+      return true;
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     session({ session, user }: any) {
       if (user) {
