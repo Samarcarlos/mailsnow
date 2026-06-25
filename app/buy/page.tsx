@@ -138,37 +138,8 @@ function BuyForm() {
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Checkout failed"); setSubmitting(false); return; }
 
-      // Load Flutterwave script on-demand then open inline modal
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await new Promise<void>((resolve, reject) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((window as any).FlutterwaveCheckout) { resolve(); return; }
-        const s = document.createElement("script");
-        s.src = "https://checkout.flutterwave.com/v3.js";
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error("Could not load payment script"));
-        document.body.appendChild(s);
-      });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).FlutterwaveCheckout({
-        public_key: data.publicKey,
-        tx_ref: data.txRef,
-        amount: data.amount,
-        currency: data.currency,
-        customer: data.customer,
-        customizations: data.customizations,
-        meta: data.meta,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        callback: function (payment: any) {
-          // Navigate the parent page — never loads our URL inside Flutterwave's iframe
-          window.location.href = `/buy/success?transaction_id=${payment.transaction_id}&tx_ref=${payment.tx_ref}&status=${payment.status}`;
-        },
-        onclose: function () {
-          setSubmitting(false);
-        },
-      });
-      setSubmitting(false);
+      // Redirect browser to Flutterwave hosted checkout — no modal, no inline script
+      window.location.href = data.url;
     } catch {
       setError("Something went wrong. Please try again.");
       setSubmitting(false);

@@ -7,6 +7,7 @@ import { checkEmailExists } from "@/lib/cpanel";
 import { getBundlePrice, PLANS } from "@/lib/plans";
 import { validateUsername, validatePassword } from "@/lib/utils";
 import { rateLimit, rateLimitResponse } from "@/lib/ratelimit";
+import { initPayment } from "@/lib/flutterwave";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 
@@ -120,21 +121,23 @@ export async function POST(req: NextRequest) {
     billingType,
   };
 
-  return NextResponse.json({
-    publicKey: process.env.FLW_PUBLIC_KEY,
-    txRef,
-    amount: amountNaira,
-    currency: "NGN",
-    redirectUrl: `${appUrl}/buy/success`,
-    customer: {
-      email: session.user!.email!,
-      name: session.user!.name ?? session.user!.email!,
-    },
-    customizations: {
-      title: "Mailsnow",
-      description: qty === 1 ? "1 Email Account" : `${qty} Email Accounts`,
-      logo: `${appUrl}/logo.png`,
-    },
-    meta,
-  });
+  let paymentLink: string;
+  try {
+    const result = await initPayment({
+      txRef,
+      amount: amountNaira,
+      currency: "NGN",
+      redirectUrl: `${appUrl}/buy/success`,
+      customerEmail: session.user!.email!,
+      customerName: session.user!.name ?? session.user!.email!,
+      planName: qty === 1 ? "1 Email Account" : `${qty} Email Accounts`,
+      meta,
+    });
+    paymentLink = result.link;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Payment init failed";
+    return NextResponse.json({ error: msg }, { status: 502 });
+  }
+
+  return NextResponse.json({ url: paymentLink });
 }
