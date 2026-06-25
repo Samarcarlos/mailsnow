@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkEmailExists } from "@/lib/cpanel";
+
+export const dynamic = "force-dynamic";
 import { validateUsername } from "@/lib/utils";
 import { rateLimit, rateLimitResponse } from "@/lib/ratelimit";
 

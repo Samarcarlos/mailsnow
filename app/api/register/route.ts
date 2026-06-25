@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { rateLimit, rateLimitResponse } from "@/lib/ratelimit";
+
+export const dynamic = "force-dynamic";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {

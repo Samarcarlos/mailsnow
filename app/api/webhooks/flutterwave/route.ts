@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyWebhookSignature, verifyTransaction } from "@/lib/flutterwave";
+
+export const dynamic = "force-dynamic";
 import { createEmailAccount, DOMAIN } from "@/lib/cpanel";
 
 export const runtime = "nodejs";
