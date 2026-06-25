@@ -376,7 +376,7 @@ function CheckoutForm() {
 export default function CheckoutPage() {
   return (
     <>
-      <Script src="https://checkout.flutterwave.com/v3.js" strategy="beforeInteractive" />
+      <Script src="https://checkout.flutterwave.com/v3.js" strategy="afterInteractive" />
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">Loading...</div>}>
         <CheckoutForm />
       </Suspense>
