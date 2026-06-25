@@ -57,24 +57,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   trustHost: true,
   providers,
-  logger: {
-    error: (error: Error) => {
-      console.error("[NextAuth REAL ERROR]", {
-        name: error.name,
-        message: error.message,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cause: (error as any).cause,
-        stack: error.stack?.split("\n").slice(0, 5).join("\n"),
-      });
-    },
-    warn: (code: string) => console.warn("[NextAuth warn]", code),
-    debug: (code: string, metadata: unknown) =>
-      console.log("[NextAuth debug]", code, JSON.stringify(metadata ?? {}).slice(0, 200)),
-  },
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async signIn({ account }: any) {
-      console.log("[auth] signIn callback reached, provider:", account?.provider);
+      void account;
       return true;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
