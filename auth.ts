@@ -47,6 +47,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "mailsnow-2026-auth-secret-key-32ch",
   adapter: PrismaAdapter(prisma),
   trustHost: true,
   providers,
