@@ -10,7 +10,7 @@ export default function PrivacyPage() {
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
-          <Link href="/checkout" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">
+          <Link href="/buy" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">
             Buy an email
           </Link>
         </div>

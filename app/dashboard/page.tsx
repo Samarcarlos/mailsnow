@@ -51,7 +51,7 @@ export default async function DashboardPage() {
             </p>
           </div>
           <Link
-            href="/checkout"
+            href="/buy"
             className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700"
           >
             + Buy another
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
           <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
             <p className="text-gray-400 mb-4">You haven&apos;t purchased any email accounts yet.</p>
             <Link
-              href="/checkout"
+              href="/buy"
               className="inline-block bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700"
             >
               Get your email address

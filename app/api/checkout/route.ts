@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
     txRef,
     amount: amountNaira,
     currency: "NGN",
-    redirectUrl: `${appUrl}/checkout/success`,
+    redirectUrl: `${appUrl}/buy/success`,
     customer: {
       email: session.user!.email!,
       name: session.user!.name ?? session.user!.email!,

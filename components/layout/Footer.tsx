@@ -16,7 +16,7 @@ export default function Footer() {
             <p className="text-gray-300 font-semibold mb-3 text-xs uppercase tracking-wide">Product</p>
             <ul className="space-y-2">
               <li><Link href="/#pricing" className="hover:text-white transition">Pricing</Link></li>
-              <li><Link href="/checkout" className="hover:text-white transition">Buy an email</Link></li>
+              <li><Link href="/buy" className="hover:text-white transition">Buy an email</Link></li>
               <li><Link href="/dashboard" className="hover:text-white transition">My accounts</Link></li>
             </ul>
           </div>

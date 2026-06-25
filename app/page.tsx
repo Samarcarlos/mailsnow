@@ -117,8 +117,8 @@ export default function HomePage() {
           <Link
             href={
               availability.status === "available"
-                ? `/checkout?username=${encodeURIComponent(username)}`
-                : "/checkout"
+                ? `/buy?username=${encodeURIComponent(username)}`
+                : "/buy"
             }
             className={`mt-4 block w-full py-3.5 rounded-2xl font-bold text-base text-center transition ${
               availability.status === "available"
@@ -146,7 +146,7 @@ export default function HomePage() {
               return (
                 <Link
                   key={opt.qty}
-                  href="/checkout"
+                  href="/buy"
                   className={`rounded-2xl border-2 p-5 text-center flex flex-col gap-1 hover:shadow-md transition ${
                     opt.qty === 5 ? "border-blue-500 shadow-md" : "border-gray-200"
                   }`}

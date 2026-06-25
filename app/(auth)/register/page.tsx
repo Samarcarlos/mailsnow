@@ -55,7 +55,7 @@ export default function RegisterPage() {
       password: form.password,
       redirect: false,
     });
-    router.push("/checkout");
+    router.push("/buy");
   }
 
   return (
@@ -73,7 +73,7 @@ export default function RegisterPage() {
         )}
 
         <button
-          onClick={() => signIn("google", { callbackUrl: "/checkout" })}
+          onClick={() => signIn("google", { callbackUrl: "/buy" })}
           className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 mb-4 transition"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
