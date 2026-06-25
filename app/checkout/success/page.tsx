@@ -19,7 +19,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
   const { transaction_id, tx_ref, status } = await searchParams;
 
-  if (status !== "successful" || !transaction_id || !tx_ref) {
+  if (!["successful", "completed"].includes(status ?? "") || !transaction_id || !tx_ref) {
     return <FailPage message="Payment was not completed. Please try again." />;
   }
 
@@ -27,7 +27,7 @@ export default async function SuccessPage({ searchParams }: Props) {
   let tx: Awaited<ReturnType<typeof verifyTransaction>>;
   try {
     tx = await verifyTransaction(transaction_id);
-    if (tx.status !== "successful") return <FailPage message="Payment verification failed." />;
+    if (!["successful", "completed"].includes(tx.status)) return <FailPage message="Payment verification failed." />;
   } catch {
     return <FailPage message="Could not verify payment. Contact support if amount was deducted." />;
   }
