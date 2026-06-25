@@ -218,16 +218,16 @@ function CheckoutForm() {
                 )}
 
                 {/* Username */}
-                <div className="flex rounded-xl overflow-hidden border-2 border-gray-200 focus-within:border-blue-500 mb-1">
+                <div className="flex rounded-xl overflow-hidden border-2 border-gray-300 bg-white focus-within:border-blue-500 mb-1">
                   <input
                     type="text"
                     placeholder="username"
                     value={slot.username}
                     onChange={(e) => checkAvailability(i, e.target.value)}
-                    className="flex-1 px-4 py-2.5 text-sm outline-none"
+                    className="flex-1 px-4 py-2.5 text-sm outline-none bg-white placeholder-gray-400"
                     maxLength={30}
                   />
-                  <span className="bg-gray-50 px-3 text-gray-400 text-xs border-l border-gray-200 flex items-center">
+                  <span className="bg-gray-100 px-3 text-gray-500 text-xs border-l border-gray-300 flex items-center font-medium">
                     @{domain}
                   </span>
                 </div>
@@ -245,17 +245,17 @@ function CheckoutForm() {
                     placeholder="Email password (min 8 chars)"
                     value={slot.password}
                     onChange={(e) => updateSlot(i, { password: e.target.value })}
-                    className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border-2 border-gray-300 bg-white rounded-lg px-3 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500"
                   />
                   <input
                     type="password"
                     placeholder="Confirm password"
                     value={slot.confirmPassword}
                     onChange={(e) => updateSlot(i, { confirmPassword: e.target.value })}
-                    className={`border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`border-2 bg-white rounded-lg px-3 py-2.5 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 ${
                       slot.confirmPassword && slot.password !== slot.confirmPassword
-                        ? "border-red-300"
-                        : "border-gray-200"
+                        ? "border-red-400"
+                        : "border-gray-300"
                     }`}
                   />
                   <p className="text-xs text-gray-400">
