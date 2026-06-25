@@ -46,6 +46,13 @@ export function getPlanBySlug(slug: string) {
   return PLANS.find((p) => p.slug === slug) ?? null;
 }
 
+export const USD_RATE = 1600; // NGN per USD — update periodically
+
 export function formatNaira(kobo: number) {
   return `₦${(kobo / 100).toLocaleString("en-NG")}`;
+}
+
+export function formatUSD(kobo: number) {
+  const usd = kobo / 100 / USD_RATE;
+  return `$${usd.toFixed(2)}`;
 }

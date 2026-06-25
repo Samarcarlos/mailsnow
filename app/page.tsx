@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { QUANTITY_OPTIONS, getBundlePrice, formatNaira, PRICE_PER_EMAIL_KOBO } from "@/lib/plans";
+import { QUANTITY_OPTIONS, getBundlePrice, formatNaira, formatUSD, PRICE_PER_EMAIL_KOBO } from "@/lib/plans";
 import Footer from "@/components/layout/Footer";
 import { validateUsername } from "@/lib/utils";
 
@@ -81,35 +81,35 @@ export default function HomePage() {
         </p>
 
         {/* Username checker */}
-        <div className="w-full max-w-md">
-          <div className="flex rounded-xl overflow-hidden border-2 border-blue-200 focus-within:border-blue-500 bg-white shadow-sm">
+        <div className="w-full max-w-lg">
+          <div className="flex rounded-2xl overflow-hidden border-2 border-blue-500 bg-white shadow-2xl shadow-blue-500/30 focus-within:border-blue-400 focus-within:shadow-blue-400/40 transition-all">
             <input
               type="text"
               placeholder="yourname"
               value={username}
               onChange={(e) => handleUsernameChange(e.target.value)}
-              className="flex-1 px-4 py-3 text-base outline-none"
+              className="flex-1 px-5 py-4 text-lg text-gray-900 outline-none bg-transparent placeholder-gray-400"
               maxLength={30}
             />
-            <span className="bg-blue-50 px-4 py-3 text-blue-600 font-medium text-sm border-l border-blue-200 flex items-center">
+            <span className="bg-blue-600 px-5 py-4 text-white font-semibold text-base flex items-center shrink-0">
               @{domain}
             </span>
           </div>
 
-          <div className="mt-2 h-5 text-sm">
+          <div className="mt-3 h-5 text-sm">
             {availability.status === "checking" && (
-              <span className="text-gray-400">Checking availability...</span>
+              <span className="text-blue-300">Checking availability...</span>
             )}
             {availability.status === "available" && (
-              <span className="text-green-600 font-medium">
+              <span className="text-green-400 font-medium">
                 ✓ {username}@{domain} is available!
               </span>
             )}
             {availability.status === "taken" && (
-              <span className="text-red-500">✗ Already taken. Try another name.</span>
+              <span className="text-red-400">✗ Already taken. Try another name.</span>
             )}
             {availability.status === "invalid" && (
-              <span className="text-orange-500">{availability.message}</span>
+              <span className="text-orange-400">{availability.message}</span>
             )}
           </div>
 
@@ -119,15 +119,15 @@ export default function HomePage() {
                 ? `/checkout?username=${encodeURIComponent(username)}`
                 : "/checkout"
             }
-            className={`mt-4 block w-full py-3 rounded-xl font-semibold text-white text-center transition ${
+            className={`mt-4 block w-full py-3.5 rounded-2xl font-bold text-base text-center transition ${
               availability.status === "available"
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                : "bg-white/10 text-white/40 cursor-not-allowed pointer-events-none border border-white/10"
             }`}
           >
             {availability.status === "available"
               ? "Get this email address →"
-              : "Check availability above to continue"}
+              : "Type a username above to check availability"}
           </Link>
         </div>
       </section>
@@ -137,7 +137,7 @@ export default function HomePage() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-2">Simple pricing</h2>
           <p className="text-center text-gray-500 mb-8">
-            {formatNaira(PRICE_PER_EMAIL_KOBO)} per email — buy more, save more
+            {formatNaira(PRICE_PER_EMAIL_KOBO)} <span className="text-gray-400">({formatUSD(PRICE_PER_EMAIL_KOBO)})</span> per email — buy more, save more
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {QUANTITY_OPTIONS.map((opt) => {
@@ -156,6 +156,7 @@ export default function HomePage() {
                   <div className="text-2xl font-bold text-gray-900">{opt.qty}</div>
                   <div className="text-xs text-gray-400">{opt.qty === 1 ? "email" : "emails"}</div>
                   <div className="text-xl font-bold text-blue-600 mt-1">{formatNaira(b.total)}</div>
+                  <div className="text-xs text-gray-400">{formatUSD(b.total)}</div>
                   {b.saved > 0 ? (
                     <div className="text-xs text-green-600">Save {formatNaira(b.saved)}</div>
                   ) : (

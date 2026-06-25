@@ -8,6 +8,7 @@ import {
   QUANTITY_OPTIONS,
   getBundlePrice,
   formatNaira,
+  formatUSD,
   PRICE_PER_EMAIL_KOBO,
   MONTHLY_PRICE_PER_EMAIL_KOBO,
 } from "@/lib/plans";
@@ -169,6 +170,7 @@ function CheckoutForm() {
                   <div className="text-blue-600 font-bold text-xs mt-1">
                     {formatNaira(b.perEmail)}/ea
                   </div>
+                  <div className="text-gray-400 text-xs">{formatUSD(b.perEmail)}</div>
                 </button>
               );
             })}
@@ -290,6 +292,7 @@ function CheckoutForm() {
                 <div className="text-blue-300 text-xs line-through">{formatNaira(bundle.original)}</div>
               )}
               <div className="font-bold text-2xl">{formatNaira(bundle.total)}</div>
+              <div className="text-blue-200 text-sm">≈ {formatUSD(bundle.total)}</div>
             </div>
           </div>
           <p className="text-blue-200 text-xs mb-5">
