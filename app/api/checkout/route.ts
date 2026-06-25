@@ -80,7 +80,9 @@ export async function POST(req: NextRequest) {
   const bundle = getBundlePrice(qty, billingType);
   const amountNaira = bundle.total / 100;
   const txRef = `mailnow-${uuidv4()}`;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    `${req.headers.get("x-forwarded-proto") ?? "https"}://${req.headers.get("x-forwarded-host") ?? req.headers.get("host")}`;
 
   // Hash all passwords and build meta
   const slotsWithHash = await Promise.all(
