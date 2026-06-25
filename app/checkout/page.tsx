@@ -232,16 +232,16 @@ function CheckoutForm() {
                 )}
 
                 {/* Username */}
-                <div className="flex rounded-xl overflow-hidden border-2 border-gray-300 bg-white focus-within:border-blue-500 mb-1">
+                <div className="flex rounded-xl overflow-hidden border-2 border-gray-400 bg-white focus-within:border-blue-500 shadow-sm mb-1">
                   <input
                     type="text"
                     placeholder="username"
                     value={slot.username}
                     onChange={(e) => checkAvailability(i, e.target.value)}
-                    className="flex-1 px-4 py-2.5 text-sm outline-none bg-white placeholder-gray-400"
+                    className="flex-1 px-4 py-3 text-sm outline-none bg-white text-gray-900 placeholder-gray-400"
                     maxLength={30}
                   />
-                  <span className="bg-gray-100 px-3 text-gray-500 text-xs border-l border-gray-300 flex items-center font-medium">
+                  <span className="bg-gray-100 px-3 text-gray-600 text-xs border-l border-gray-400 flex items-center font-medium">
                     @{domain}
                   </span>
                 </div>
@@ -260,12 +260,12 @@ function CheckoutForm() {
                       placeholder="Email password (min 8 chars)"
                       value={slot.password}
                       onChange={(e) => updateSlot(i, { password: e.target.value })}
-                      className="w-full border-2 border-gray-300 bg-white rounded-lg px-3 py-2.5 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                      className="w-full border-2 border-gray-400 bg-white rounded-lg px-3 py-3 pr-11 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 shadow-sm"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswords(prev => ({ ...prev, [i]: { ...prev[i], pass: !prev[i]?.pass } }))}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 p-0.5"
                     >
                       <EyeIcon open={!!showPasswords[i]?.pass} />
                     </button>
@@ -276,16 +276,16 @@ function CheckoutForm() {
                       placeholder="Confirm password"
                       value={slot.confirmPassword}
                       onChange={(e) => updateSlot(i, { confirmPassword: e.target.value })}
-                      className={`w-full border-2 bg-white rounded-lg px-3 py-2.5 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 ${
+                      className={`w-full border-2 bg-white rounded-lg px-3 py-3 pr-11 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 shadow-sm ${
                         slot.confirmPassword && slot.password !== slot.confirmPassword
                           ? "border-red-400"
-                          : "border-gray-300"
+                          : "border-gray-400"
                       }`}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPasswords(prev => ({ ...prev, [i]: { ...prev[i], confirm: !prev[i]?.confirm } }))}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 p-0.5"
                     >
                       <EyeIcon open={!!showPasswords[i]?.confirm} />
                     </button>
