@@ -2,14 +2,14 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 
 const EFFECTIVE_DATE = "1 January 2025";
-const SUPPORT_EMAIL = "support@mailnow.com";
+const SUPPORT_EMAIL = "support@mailsnow.live";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">Mailnow</Link>
+          <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
           <Link href="/checkout" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">
             Buy an email
           </Link>
@@ -24,7 +24,7 @@ export default function TermsPage() {
 
           <Section title="1. Acceptance of Terms">
             <p>
-              By creating an account or purchasing any product from Mailnow (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
+              By creating an account or purchasing any product from Mailsnow (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
               &ldquo;our&rdquo;), you agree to be bound by these Terms of Service. If you do not agree with any
               part of these terms, you must not use our service. We may update these terms at any time;
               continued use of the service after updates means you accept the revised terms.
@@ -33,7 +33,7 @@ export default function TermsPage() {
 
           <Section title="2. Description of Service">
             <p>
-              Mailnow provides personal email accounts hosted on our mail servers. After purchasing an
+              Mailsnow provides personal email accounts hosted on our mail servers. After purchasing an
               email address, you receive a fully functional mailbox accessible via webmail, IMAP, and SMTP.
               You are responsible for all activity that occurs under your account.
             </p>
@@ -42,8 +42,8 @@ export default function TermsPage() {
           <Section title="3. Account Registration">
             <p>To purchase an email account, you must:</p>
             <ul className="list-disc list-inside space-y-1 mt-2">
-              <li>Provide a valid email address for your Mailnow account</li>
-              <li>Create a secure password for your Mailnow account</li>
+              <li>Provide a valid email address for your Mailsnow account</li>
+              <li>Create a secure password for your Mailsnow account</li>
               <li>Be at least 13 years old, or have parental consent if younger</li>
               <li>Provide accurate and truthful information</li>
             </ul>
@@ -54,7 +54,7 @@ export default function TermsPage() {
           </Section>
 
           <Section title="4. Acceptable Use">
-            <p>You may use your Mailnow email account only for lawful purposes. You must NOT use the service to:</p>
+            <p>You may use your Mailsnow email account only for lawful purposes. You must NOT use the service to:</p>
             <ul className="list-disc list-inside space-y-1 mt-2">
               <li>Send spam, unsolicited bulk email, or phishing messages</li>
               <li>Distribute viruses, malware, or any harmful software</li>
@@ -124,7 +124,7 @@ export default function TermsPage() {
 
           <Section title="8. Privacy">
             <p>
-              Your use of Mailnow is also governed by our{" "}
+              Your use of Mailsnow is also governed by our{" "}
               <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>,
               which is incorporated into these Terms by reference.
             </p>
@@ -141,7 +141,7 @@ export default function TermsPage() {
 
           <Section title="10. Limitation of Liability">
             <p>
-              To the maximum extent permitted by law, Mailnow shall not be liable for any indirect,
+              To the maximum extent permitted by law, Mailsnow shall not be liable for any indirect,
               incidental, special, consequential, or punitive damages, including loss of data, loss of
               revenue, or loss of business, arising from your use of or inability to use the service.
               Our total liability to you shall not exceed the amount you paid us in the 3 months

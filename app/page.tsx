@@ -55,7 +55,7 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <span className="text-xl font-bold text-blue-600">Mailnow</span>
+          <span className="text-xl font-bold text-blue-600">Mailsnow</span>
           <div className="flex gap-4 text-sm items-center">
             <Link href="/faq" className="text-gray-500 hover:text-gray-900 hidden md:block">FAQ</Link>
             <Link href="/login" className="text-gray-600 hover:text-gray-900">Sign in</Link>
@@ -219,7 +219,7 @@ export default function HomePage() {
               {
                 icon: "✅",
                 title: "Username reserved for life",
-                desc: "Once you buy john@mailnow.com, no one else can ever register that same address. It belongs only to you.",
+                desc: "Once you buy john@mailsnow.live, no one else can ever register that same address. It belongs only to you.",
               },
             ].map((item) => (
               <div key={item.title} className="bg-gray-800 rounded-2xl p-5">

@@ -14,8 +14,10 @@ model User {
   email         String         @unique
   emailVerified DateTime?
   image         String?
-  passwordHash  String?
-  role          Role           @default(CUSTOMER)
+  passwordHash     String?
+  twoFactorSecret  String?
+  twoFactorEnabled Boolean        @default(false)
+  role             Role           @default(CUSTOMER)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   accounts      Account[]

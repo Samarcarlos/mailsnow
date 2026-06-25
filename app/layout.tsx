@@ -7,7 +7,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mailnow — Buy Your Email Address",
+  title: "Mailsnow — Buy Your Email Address",
   description:
     "Get your own personal email address instantly. Works on phone, PC, and any mail app.",
 };

@@ -21,9 +21,10 @@ export default async function DashboardPage() {
       {/* Nav */}
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">Mailnow</Link>
+          <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
           <div className="flex items-center gap-4 text-sm">
             <span className="text-gray-500">{session.user.email}</span>
+            <Link href="/dashboard/security" className="text-gray-500 hover:text-gray-900">Security</Link>
             <Link href="/api/auth/signout" className="text-gray-500 hover:text-gray-900">Sign out</Link>
           </div>
         </div>

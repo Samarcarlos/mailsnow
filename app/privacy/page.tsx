@@ -2,14 +2,14 @@ import Link from "next/link";
 import Footer from "@/components/layout/Footer";
 
 const EFFECTIVE_DATE = "1 January 2025";
-const SUPPORT_EMAIL = "support@mailnow.com";
+const SUPPORT_EMAIL = "support@mailsnow.live";
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">Mailnow</Link>
+          <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
           <Link href="/checkout" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">
             Buy an email
           </Link>
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <div className="space-y-8 text-gray-700 text-sm leading-relaxed">
 
           <p className="text-base text-gray-600">
-            At Mailnow, your privacy is important to us. This policy explains what information we collect,
+            At Mailsnow, your privacy is important to us. This policy explains what information we collect,
             how we use it, and how we protect it.
           </p>
 
@@ -123,7 +123,7 @@ export default function PrivacyPage() {
           <Section title="7. Cookies">
             <p>
               We use only essential session cookies required for authentication (e.g. keeping you logged
-              in to your Mailnow account). We do not use advertising cookies, tracking pixels, or
+              in to your Mailsnow account). We do not use advertising cookies, tracking pixels, or
               third-party analytics.
             </p>
           </Section>

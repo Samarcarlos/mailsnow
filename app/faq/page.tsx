@@ -6,12 +6,12 @@ const faqs = [
     category: "Getting started",
     items: [
       {
-        q: "What is Mailnow?",
-        a: "Mailnow is a service that lets you buy your own personal email address — for example, yourname@mailnow.com. Once purchased, you can use it on any phone, PC, or email app just like Gmail or Yahoo Mail.",
+        q: "What is Mailsnow?",
+        a: "Mailsnow is a service that lets you buy your own personal email address — for example, yourname@mailsnow.live. Once purchased, you can use it on any phone, PC, or email app just like Gmail or Yahoo Mail.",
       },
       {
         q: "What email address will I get?",
-        a: "You choose your own username during checkout. Your email will follow the format username@mailnow.com (or whatever our domain is). You can check availability before paying.",
+        a: "You choose your own username during checkout. Your email will follow the format username@mailsnow.live (or whatever our domain is). You can check availability before paying.",
       },
       {
         q: "How quickly do I get my email after paying?",
@@ -28,7 +28,7 @@ const faqs = [
       },
       {
         q: "Can I use it with the Gmail app?",
-        a: "Yes. Open the Gmail app → tap your profile photo → Add another account → choose Other (not Google) → enter your email address and password → enter our IMAP/SMTP server settings. Your Mailnow inbox will then appear inside Gmail alongside your other accounts.",
+        a: "Yes. Open the Gmail app → tap your profile photo → Add another account → choose Other (not Google) → enter your email address and password → enter our IMAP/SMTP server settings. Your Mailsnow inbox will then appear inside Gmail alongside your other accounts.",
       },
       {
         q: "Can I use it on both my phone and PC at the same time?",
@@ -45,7 +45,7 @@ const faqs = [
     items: [
       {
         q: "Is my email private? Can anyone else read it?",
-        a: "Yes, completely private. Each mailbox is isolated — only the person who knows your password can access your inbox. Other customers of Mailnow cannot read your emails. Even we (Mailnow) do not routinely access customer mailboxes.",
+        a: "Yes, completely private. Each mailbox is isolated — only the person who knows your password can access your inbox. Other customers of Mailsnow cannot read your emails. Even we (Mailsnow) do not routinely access customer mailboxes.",
       },
       {
         q: "I set my own password — is that safe?",
@@ -107,7 +107,7 @@ export default function FaqPage() {
       {/* Nav */}
       <nav className="bg-white border-b border-gray-200 px-4 py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-blue-600">Mailnow</Link>
+          <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
           <Link href="/checkout" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">
             Buy an email
           </Link>
@@ -118,7 +118,7 @@ export default function FaqPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h1>
         <p className="text-gray-500 mb-10">
           Can&apos;t find your answer?{" "}
-          <a href="mailto:support@mailnow.com" className="text-blue-600 hover:underline">
+          <a href="mailto:support@mailsnow.live" className="text-blue-600 hover:underline">
             Contact our support team
           </a>
           .
@@ -154,7 +154,7 @@ export default function FaqPage() {
           <p className="font-semibold text-gray-800 mb-1">Still have questions?</p>
           <p className="text-gray-500 text-sm mb-4">Our support team usually replies within a few hours.</p>
           <a
-            href="mailto:support@mailnow.com"
+            href="mailto:support@mailsnow.live"
             className="inline-block bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700"
           >
             Email us

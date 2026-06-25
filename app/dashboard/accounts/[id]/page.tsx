@@ -42,7 +42,7 @@ export default async function AccountDetailPage({ params }: Props) {
           <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-800">
             ← Back to my accounts
           </Link>
-          <Link href="/" className="text-xl font-bold text-blue-600">Mailnow</Link>
+          <Link href="/" className="text-xl font-bold text-blue-600">Mailsnow</Link>
         </div>
       </nav>
 
