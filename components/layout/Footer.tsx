@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <span className="text-white font-bold text-lg">Mailnow</span>
+            <span className="text-white font-bold text-lg">Mailsnow</span>
             <p className="mt-2 text-xs text-gray-500 leading-relaxed">
               Affordable personal email addresses that work on any device.
             </p>
@@ -25,7 +25,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link href="/faq" className="hover:text-white transition">FAQ</Link></li>
               <li>
-                <a href="mailto:support@mailnow.com" className="hover:text-white transition">
+                <a href="mailto:support@mailsnow.live" className="hover:text-white transition">
                   Contact us
                 </a>
               </li>
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p>© {year} Mailnow. All rights reserved.</p>
+          <p>© {year} Mailsnow. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <span className="text-xs text-gray-600">🔒 Secured by Flutterwave</span>
             <span className="text-xs text-gray-600">🛡 SSL encrypted</span>
