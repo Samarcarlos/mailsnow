@@ -7,21 +7,26 @@ interface Props {
 }
 
 export default function ProvisionButton({ orderId }: Props) {
-  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "loading" | "needsPassword" | "done" | "error">("idle");
   const [creds, setCreds] = useState<{ email: string; password: string } | null>(null);
+  const [manualPassword, setManualPassword] = useState("");
   const [error, setError] = useState("");
 
-  async function handleProvision() {
+  async function provision(passwordPlain?: string) {
     setState("loading");
     setError("");
     try {
       const res = await fetch("/api/admin/provision-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
+        body: JSON.stringify({ orderId, ...(passwordPlain ? { passwordPlain } : {}) }),
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.needsPassword) {
+          setState("needsPassword");
+          return;
+        }
         setError(data.error ?? "Failed to provision");
         setState("error");
         return;
@@ -44,21 +49,44 @@ export default function ProvisionButton({ orderId }: Props) {
     );
   }
 
+  if (state === "needsPassword") {
+    return (
+      <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-2 space-y-2 min-w-[220px]">
+        <p className="text-amber-800 font-medium">Enter password from Flutterwave dashboard:</p>
+        <input
+          type="text"
+          value={manualPassword}
+          onChange={(e) => setManualPassword(e.target.value)}
+          placeholder="e.g. Olatunji@17"
+          className="w-full border border-gray-300 rounded px-2 py-1 text-gray-900 text-xs"
+          autoFocus
+        />
+        <button
+          onClick={() => provision(manualPassword)}
+          disabled={!manualPassword.trim()}
+          className="w-full bg-amber-600 text-white rounded px-2 py-1 font-medium hover:bg-amber-700 disabled:opacity-50"
+        >
+          Provision
+        </button>
+      </div>
+    );
+  }
+
   if (state === "error") {
     return (
       <button
-        onClick={handleProvision}
+        onClick={() => provision()}
         className="text-xs text-red-600 border border-red-300 rounded px-2 py-1 hover:bg-red-50"
         title={error}
       >
-        Retry ({error})
+        Retry
       </button>
     );
   }
 
   return (
     <button
-      onClick={handleProvision}
+      onClick={() => provision()}
       disabled={state === "loading"}
       className="text-xs bg-amber-100 text-amber-700 border border-amber-300 rounded px-2 py-1 hover:bg-amber-200 font-medium disabled:opacity-60 whitespace-nowrap"
     >

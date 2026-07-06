@@ -11,42 +11,50 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { orderId } = await req.json();
+  const { orderId, passwordPlain: manualPassword } = await req.json();
   if (!orderId) return NextResponse.json({ error: "orderId required" }, { status: 400 });
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
-  const bundleTxRef = order.flwTxRef.slice(
-    0,
-    order.flwTxRef.lastIndexOf(`-${order.desiredUsername}`)
-  );
+  let resolvedPassword: string;
 
-  let tx: Awaited<ReturnType<typeof verifyTransaction>>;
-  try {
-    const found = await searchTransactionByRef(bundleTxRef);
-    tx = await verifyTransaction(String(found.id));
-  } catch {
-    return NextResponse.json({ error: "Transaction not found on Flutterwave" }, { status: 404 });
+  if (manualPassword) {
+    resolvedPassword = manualPassword;
+  } else {
+    const bundleTxRef = order.flwTxRef.slice(
+      0,
+      order.flwTxRef.lastIndexOf(`-${order.desiredUsername}`)
+    );
+
+    let tx: Awaited<ReturnType<typeof verifyTransaction>>;
+    try {
+      const found = await searchTransactionByRef(bundleTxRef);
+      tx = await verifyTransaction(String(found.id));
+    } catch {
+      return NextResponse.json({ error: "Transaction not found on Flutterwave", needsPassword: true }, { status: 404 });
+    }
+
+    if (!["successful", "completed"].includes(tx.status)) {
+      return NextResponse.json({ error: "Transaction not successful" }, { status: 400 });
+    }
+
+    const slotsRaw = (tx.meta ?? {}).slots;
+    if (!slotsRaw) return NextResponse.json({ error: "No slots in transaction meta", needsPassword: true }, { status: 400 });
+
+    const slots: Array<{ username: string; passwordPlain: string }> = JSON.parse(slotsRaw);
+    const slot = slots.find((s) => s.username === order.desiredUsername);
+    if (!slot) return NextResponse.json({ error: "Username not found in payment meta", needsPassword: true }, { status: 404 });
+
+    resolvedPassword = slot.passwordPlain;
   }
 
-  if (!["successful", "completed"].includes(tx.status)) {
-    return NextResponse.json({ error: "Transaction not successful" }, { status: 400 });
-  }
-
-  const slotsRaw = (tx.meta ?? {}).slots;
-  if (!slotsRaw) return NextResponse.json({ error: "No slots in transaction meta" }, { status: 400 });
-
-  const slots: Array<{ username: string; passwordPlain: string }> = JSON.parse(slotsRaw);
-  const slot = slots.find((s) => s.username === order.desiredUsername);
-  if (!slot) return NextResponse.json({ error: "Username not found in payment meta" }, { status: 404 });
-
-  const emailAddress = `${slot.username}@${DOMAIN}`;
+  const emailAddress = `${order.desiredUsername}@${DOMAIN}`;
   const plan = await prisma.plan.findFirst({ where: { slug: "standard" } });
   const quotaMb = plan ? plan.storageGb * 1024 : 5120;
 
   try {
-    await createEmailAccount({ localPart: slot.username, password: slot.passwordPlain, quotaMb });
+    await createEmailAccount({ localPart: order.desiredUsername, password: resolvedPassword, quotaMb });
   } catch { /* may already exist on cPanel */ }
 
   await prisma.$transaction([
@@ -64,9 +72,9 @@ export async function POST(req: NextRequest) {
     }),
     prisma.order.update({
       where: { id: order.id },
-      data: { status: "COMPLETED", flwTransactionId: String(tx.id) },
+      data: { status: "COMPLETED" },
     }),
   ]);
 
-  return NextResponse.json({ email: emailAddress, password: slot.passwordPlain });
+  return NextResponse.json({ email: emailAddress, password: resolvedPassword });
 }
