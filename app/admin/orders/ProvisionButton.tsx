@@ -7,35 +7,32 @@ interface Props {
 }
 
 export default function ProvisionButton({ orderId }: Props) {
-  const [state, setState] = useState<"idle" | "loading" | "needsPassword" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "form" | "loading" | "done" | "error">("idle");
   const [creds, setCreds] = useState<{ email: string; password: string } | null>(null);
   const [manualPassword, setManualPassword] = useState("");
   const [error, setError] = useState("");
 
-  async function provision(passwordPlain?: string) {
+  async function provision() {
+    if (!manualPassword.trim()) return;
     setState("loading");
     setError("");
     try {
       const res = await fetch("/api/admin/provision-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, ...(passwordPlain ? { passwordPlain } : {}) }),
+        body: JSON.stringify({ orderId, passwordPlain: manualPassword.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.needsPassword) {
-          setState("needsPassword");
-          return;
-        }
         setError(data.error ?? "Failed to provision");
-        setState("error");
+        setState("form");
         return;
       }
       setCreds(data);
       setState("done");
     } catch {
-      setError("Network error");
-      setState("error");
+      setError("Network error — try again");
+      setState("form");
     }
   }
 
@@ -49,48 +46,47 @@ export default function ProvisionButton({ orderId }: Props) {
     );
   }
 
-  if (state === "needsPassword") {
+  if (state === "form" || state === "loading") {
     return (
       <div className="text-xs bg-amber-50 border border-amber-200 rounded-lg p-2 space-y-2 min-w-[220px]">
-        <p className="text-amber-800 font-medium">Enter password from Flutterwave dashboard:</p>
+        <p className="text-amber-800 font-medium">Password (from Flutterwave):</p>
+        {error && <p className="text-red-600">{error}</p>}
         <input
           type="text"
           value={manualPassword}
           onChange={(e) => setManualPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && provision()}
           placeholder="e.g. Olatunji@17"
           className="w-full border border-gray-300 rounded px-2 py-1 text-gray-900 text-xs"
           autoFocus
+          disabled={state === "loading"}
         />
-        <button
-          onClick={() => provision(manualPassword)}
-          disabled={!manualPassword.trim()}
-          className="w-full bg-amber-600 text-white rounded px-2 py-1 font-medium hover:bg-amber-700 disabled:opacity-50"
-        >
-          Provision
-        </button>
+        <div className="flex gap-1">
+          <button
+            onClick={provision}
+            disabled={state === "loading" || !manualPassword.trim()}
+            className="flex-1 bg-amber-600 text-white rounded px-2 py-1 font-medium hover:bg-amber-700 disabled:opacity-50"
+          >
+            {state === "loading" ? "Provisioning…" : "Provision"}
+          </button>
+          <button
+            onClick={() => setState("idle")}
+            disabled={state === "loading"}
+            className="text-gray-500 rounded px-2 py-1 hover:bg-gray-100"
+          >
+            ✕
+          </button>
+        </div>
       </div>
-    );
-  }
-
-  if (state === "error") {
-    return (
-      <button
-        onClick={() => provision()}
-        className="text-xs text-red-600 border border-red-300 rounded px-2 py-1 hover:bg-red-50"
-        title={error}
-      >
-        Retry
-      </button>
     );
   }
 
   return (
     <button
-      onClick={() => provision()}
-      disabled={state === "loading"}
-      className="text-xs bg-amber-100 text-amber-700 border border-amber-300 rounded px-2 py-1 hover:bg-amber-200 font-medium disabled:opacity-60 whitespace-nowrap"
+      onClick={() => setState("form")}
+      className="text-xs bg-amber-100 text-amber-700 border border-amber-300 rounded px-2 py-1 hover:bg-amber-200 font-medium whitespace-nowrap"
     >
-      {state === "loading" ? "Provisioning…" : "Provision →"}
+      Provision →
     </button>
   );
 }
