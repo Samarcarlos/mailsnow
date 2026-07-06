@@ -58,6 +58,16 @@ export async function verifyTransaction(transactionId: string) {
   };
 }
 
+export async function searchTransactionByRef(txRef: string) {
+  const res = await fetch(`${BASE}/transactions?tx_ref=${encodeURIComponent(txRef)}`, { headers });
+  if (!res.ok) throw new Error(`Flutterwave search error: ${res.status}`);
+  const data = await res.json();
+  if (data.status !== "success" || !Array.isArray(data.data) || data.data.length === 0) {
+    throw new Error("Transaction not found");
+  }
+  return data.data[0] as { id: number; status: string; meta: Record<string, string> };
+}
+
 export function verifyWebhookSignature(signature: string): boolean {
   return signature === process.env.FLW_SECRET_HASH;
 }

@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatNaira } from "@/lib/plans";
+import GetCredentialsButton from "./GetCredentialsButton";
 
 const DOMAIN = process.env.NEXT_PUBLIC_MAIL_DOMAIN ?? "mailsnow.live";
 
@@ -133,6 +134,7 @@ export default async function DashboardPage() {
                       <th className="text-left px-5 py-3 font-medium">Type</th>
                       <th className="text-left px-5 py-3 font-medium">Status</th>
                       <th className="text-left px-5 py-3 font-medium">Transaction ID</th>
+                      <th className="text-left px-5 py-3 font-medium"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -154,12 +156,11 @@ export default async function DashboardPage() {
                           <StatusBadge status={order.status} />
                         </td>
                         <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
-                          {order.flwTransactionId ?? (
-                            order.status === "PENDING" ? (
-                              <Link href="/dashboard/recover" className="text-amber-600 hover:underline">
-                                Recover
-                              </Link>
-                            ) : "—"
+                          {order.flwTransactionId ?? "—"}
+                        </td>
+                        <td className="px-5 py-3.5">
+                          {order.status === "PENDING" && (
+                            <GetCredentialsButton orderId={order.id} />
                           )}
                         </td>
                       </tr>
@@ -185,10 +186,8 @@ export default async function DashboardPage() {
                       <span>·</span>
                       <span>{order.billingType === "ONE_TIME" ? "One-time" : "Monthly"}</span>
                     </div>
-                    {order.status === "PENDING" && !order.flwTransactionId && (
-                      <Link href="/dashboard/recover" className="text-xs text-amber-600 hover:underline mt-1 inline-block">
-                        Recover this purchase →
-                      </Link>
+                    {order.status === "PENDING" && (
+                      <GetCredentialsButton orderId={order.id} />
                     )}
                   </div>
                 ))}

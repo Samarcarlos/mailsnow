@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { formatNaira } from "@/lib/plans";
+import ProvisionButton from "./ProvisionButton";
 
 function formatDate(d: Date) {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
@@ -45,6 +46,7 @@ export default async function AdminOrdersPage() {
                 <th className="text-left px-5 py-3 font-medium">Type</th>
                 <th className="text-left px-5 py-3 font-medium">Status</th>
                 <th className="text-left px-5 py-3 font-medium">Transaction ID</th>
+                <th className="text-left px-5 py-3 font-medium">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -76,6 +78,11 @@ export default async function AdminOrdersPage() {
                   <td className="px-5 py-3.5 font-mono text-xs text-gray-400">
                     {order.flwTransactionId ?? "—"}
                   </td>
+                  <td className="px-5 py-3.5">
+                    {order.status === "PENDING" && (
+                      <ProvisionButton orderId={order.id} />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -100,6 +107,11 @@ export default async function AdminOrdersPage() {
                 <span>·</span>
                 <span>{order.billingType === "ONE_TIME" ? "One-time" : "Monthly"}</span>
               </div>
+              {order.status === "PENDING" && (
+                <div className="mt-2">
+                  <ProvisionButton orderId={order.id} />
+                </div>
+              )}
             </div>
           ))}
         </div>
