@@ -57,24 +57,28 @@ export async function POST(req: NextRequest) {
     await createEmailAccount({ localPart: order.desiredUsername, password: resolvedPassword, quotaMb });
   } catch { /* may already exist on cPanel */ }
 
-  await prisma.$transaction([
-    prisma.emailAccount.upsert({
-      where: { orderId: order.id },
-      create: {
-        userId: order.userId,
-        planId: order.planId,
-        orderId: order.id,
-        emailAddress,
-        status: "ACTIVE",
-        quotaMb,
-      },
-      update: { status: "ACTIVE" },
-    }),
-    prisma.order.update({
-      where: { id: order.id },
-      data: { status: "COMPLETED" },
-    }),
-  ]);
+  // If emailAddress already has an EmailAccount (duplicate order), just mark this order COMPLETED
+  const existing = await prisma.emailAccount.findUnique({ where: { emailAddress } });
+  if (existing) {
+    await prisma.order.update({ where: { id: order.id }, data: { status: "COMPLETED" } });
+  } else {
+    await prisma.$transaction([
+      prisma.emailAccount.create({
+        data: {
+          userId: order.userId,
+          planId: order.planId,
+          orderId: order.id,
+          emailAddress,
+          status: "ACTIVE",
+          quotaMb,
+        },
+      }),
+      prisma.order.update({
+        where: { id: order.id },
+        data: { status: "COMPLETED" },
+      }),
+    ]);
+  }
 
   return NextResponse.json({ email: emailAddress, password: resolvedPassword });
 }

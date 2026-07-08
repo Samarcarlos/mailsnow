@@ -77,27 +77,34 @@ export default async function SuccessPage({ searchParams }: Props) {
     try {
       await createEmailAccount({ localPart: slot.username, password: slot.passwordPlain, quotaMb });
     } catch {
-      // may already exist from webhook
+      // may already exist from webhook or duplicate order
     }
 
-    await prisma.$transaction([
-      prisma.emailAccount.upsert({
-        where: { orderId: order.id },
-        create: {
-          userId: order.userId,
-          planId: order.planId,
-          orderId: order.id,
-          emailAddress,
-          status: "ACTIVE",
-          quotaMb,
-        },
-        update: {},
-      }),
-      prisma.order.update({
+    // If another order already claimed this emailAddress, just mark this order COMPLETED
+    const existingAccount = await prisma.emailAccount.findUnique({ where: { emailAddress } });
+    if (existingAccount) {
+      await prisma.order.update({
         where: { id: order.id },
         data: { status: "COMPLETED", flwTransactionId: transaction_id },
-      }),
-    ]);
+      });
+    } else {
+      await prisma.$transaction([
+        prisma.emailAccount.create({
+          data: {
+            userId: order.userId,
+            planId: order.planId,
+            orderId: order.id,
+            emailAddress,
+            status: "ACTIVE",
+            quotaMb,
+          },
+        }),
+        prisma.order.update({
+          where: { id: order.id },
+          data: { status: "COMPLETED", flwTransactionId: transaction_id },
+        }),
+      ]);
+    }
 
     results.push({ emailAddress, passwordPlain: slot.passwordPlain, alreadyExisted: false });
   }
