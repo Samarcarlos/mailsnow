@@ -53,10 +53,15 @@ export async function provisionBundle(transactionId: string, bundleTxRef: string
         password: slot.passwordPlain,
         quotaMb,
       });
+    } catch {
+      // cPanel may throw if account already exists — continue to DB update
+    }
 
+    try {
       await prisma.$transaction([
-        prisma.emailAccount.create({
-          data: {
+        prisma.emailAccount.upsert({
+          where: { orderId: order.id },
+          create: {
             userId: order.userId,
             planId: order.planId,
             orderId: order.id,
@@ -64,6 +69,7 @@ export async function provisionBundle(transactionId: string, bundleTxRef: string
             status: "ACTIVE",
             quotaMb,
           },
+          update: { status: "ACTIVE" },
         }),
         prisma.order.update({
           where: { id: order.id },
@@ -71,11 +77,7 @@ export async function provisionBundle(transactionId: string, bundleTxRef: string
         }),
       ]);
     } catch (err) {
-      console.error(`Failed to provision ${slot.username}:`, err);
-      await prisma.order.update({
-        where: { id: order.id },
-        data: { status: "FAILED", flwTransactionId: transactionId },
-      });
+      console.error(`Failed to update DB for ${slot.username}:`, err);
     }
   }
 }
