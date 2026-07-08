@@ -159,9 +159,7 @@ export default async function DashboardPage() {
                           {order.flwTransactionId ?? "—"}
                         </td>
                         <td className="px-5 py-3.5">
-                          {order.status === "PENDING" && (
-                            <GetCredentialsButton orderId={order.id} />
-                          )}
+                          <GetCredentialsButton orderId={order.id} />
                         </td>
                       </tr>
                     ))}
@@ -186,9 +184,7 @@ export default async function DashboardPage() {
                       <span>·</span>
                       <span>{order.billingType === "ONE_TIME" ? "One-time" : "Monthly"}</span>
                     </div>
-                    {order.status === "PENDING" && (
-                      <GetCredentialsButton orderId={order.id} />
-                    )}
+                    <GetCredentialsButton orderId={order.id} />
                   </div>
                 ))}
               </div>

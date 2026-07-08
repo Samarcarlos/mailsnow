@@ -103,9 +103,9 @@ export default function GetCredentialsButton({ orderId }: Props) {
     <button
       onClick={handleClick}
       disabled={state === "loading"}
-      className="text-xs font-medium text-amber-700 bg-amber-50 border border-amber-300 rounded-lg px-3 py-1.5 hover:bg-amber-100 disabled:opacity-60 mt-1 inline-block"
+      className="text-xs font-medium text-blue-600 hover:underline disabled:opacity-60"
     >
-      {state === "loading" ? "Loading credentials…" : "Get my email & password →"}
+      {state === "loading" ? "Loading…" : "View credentials"}
     </button>
   );
 }
