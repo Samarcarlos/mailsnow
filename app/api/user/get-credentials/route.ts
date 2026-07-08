@@ -16,17 +16,25 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  const bundleTxRef = order.flwTxRef.slice(
-    0,
-    order.flwTxRef.lastIndexOf(`-${order.desiredUsername}`)
-  );
-
   let tx: Awaited<ReturnType<typeof verifyTransaction>>;
   try {
-    const found = await searchTransactionByRef(bundleTxRef);
-    tx = await verifyTransaction(String(found.id));
+    if (order.flwTransactionId) {
+      // Fast path: transaction ID was stored at checkout
+      tx = await verifyTransaction(order.flwTransactionId);
+    } else {
+      // Fallback: search by tx_ref
+      const bundleTxRef = order.flwTxRef.slice(
+        0,
+        order.flwTxRef.lastIndexOf(`-${order.desiredUsername}`)
+      );
+      const found = await searchTransactionByRef(bundleTxRef);
+      tx = await verifyTransaction(String(found.id));
+    }
   } catch {
-    return NextResponse.json({ error: "Transaction not found. Please contact support." }, { status: 404 });
+    return NextResponse.json(
+      { error: "Could not retrieve your credentials automatically. Please contact support — we will set up your account within a few hours." },
+      { status: 404 }
+    );
   }
 
   if (!["successful", "completed"].includes(tx.status)) {

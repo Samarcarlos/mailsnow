@@ -24,12 +24,14 @@ export default async function SuccessPage({ searchParams }: Props) {
   }
 
   let tx: Awaited<ReturnType<typeof verifyTransaction>>;
+  let txError: string | null = null;
   try {
     tx = await verifyTransaction(transaction_id);
-    if (!["successful", "completed"].includes(tx.status)) return <FailPage message="Payment verification failed." />;
+    if (!["successful", "completed"].includes(tx.status)) txError = "Payment verification failed.";
   } catch {
-    return <FailPage message="Could not verify payment. Contact support if amount was deducted." />;
+    txError = "Could not verify payment. Contact support if amount was deducted.";
   }
+  if (txError) return <FailPage message={txError} />;
 
   const meta = tx.meta ?? {};
   const bundleTxRef = meta.bundleTxRef as string ?? tx_ref;
@@ -40,6 +42,16 @@ export default async function SuccessPage({ searchParams }: Props) {
   }
 
   const slots: Array<{ username: string; passwordPlain: string }> = JSON.parse(slotsRaw);
+
+  // Store transaction_id early so stuck orders can be recovered even if provisioning fails below
+  await prisma.order.updateMany({
+    where: {
+      flwTxRef: { in: slots.map((s) => `${bundleTxRef}-${s.username}`) },
+      flwTransactionId: null,
+    },
+    data: { flwTransactionId: transaction_id },
+  });
+
   const plan = await prisma.plan.findFirst({ where: { slug: "standard" } });
   if (!plan) return <FailPage message="Plan not found." />;
 
