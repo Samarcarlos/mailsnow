@@ -79,9 +79,7 @@ export default async function AdminOrdersPage() {
                     {order.flwTransactionId ?? "—"}
                   </td>
                   <td className="px-5 py-3.5">
-                    {order.status === "PENDING" && (
-                      <ProvisionButton orderId={order.id} />
-                    )}
+                    <ProvisionButton orderId={order.id} />
                   </td>
                 </tr>
               ))}
@@ -107,11 +105,9 @@ export default async function AdminOrdersPage() {
                 <span>·</span>
                 <span>{order.billingType === "ONE_TIME" ? "One-time" : "Monthly"}</span>
               </div>
-              {order.status === "PENDING" && (
-                <div className="mt-2">
-                  <ProvisionButton orderId={order.id} />
-                </div>
-              )}
+              <div className="mt-2">
+                <ProvisionButton orderId={order.id} />
+              </div>
             </div>
           ))}
         </div>

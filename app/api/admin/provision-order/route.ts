@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
 
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  // Allow reprovisioning completed orders too (fixes broken cPanel accounts)
 
   let resolvedPassword: string;
 
